@@ -1,7 +1,7 @@
 import { Link, useMatchRoute } from '@tanstack/react-router';
 import { AudioLines, Box, Mic, Settings, Speaker, Volume2, Wand2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import voiceboxLogo from '@/assets/voicebox-logo.png';
+import voiceboxLogo from '@/assets/voicebox-logo-512.png';
 import { cn } from '@/lib/utils/cn';
 import { usePlatform } from '@/platform/PlatformContext';
 import type { UpdateStatus } from '@/platform/types';

@@ -1,7 +1,7 @@
 import { ArrowUpRight } from 'lucide-react';
 import type { CSSProperties, ReactNode } from 'react';
 import { useEffect, useState } from 'react';
-import voiceboxLogo from '@/assets/voicebox-logo.png';
+import voiceboxLogo from '@/assets/voicebox-logo-512.png';
 import {
   detectCurrentPlatformTarget,
   PLATFORM_SUPPORT_TARGETS,
