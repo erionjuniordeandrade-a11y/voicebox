@@ -1,0 +1,32 @@
+weights:
+  speaker_similarity: 0.25
+  medical_pronunciation: 0.25
+  naturalness: 0.20
+  long_form_stability: 0.15
+  editing_burden: 0.15
+
+thresholds:
+  production_ready_overall: 4.2
+  minimum_per_language: 4.0
+  catastrophic_pronunciation_max: 0
+  first_pass_acceptance_rate_ptbr: 0.80
+  first_pass_acceptance_rate_en: 0.70
+
+languages:
+  - pt-BR
+  - en
+
+rubric_scale:
+  1: unusable
+  2: weak
+  3: acceptable-with-heavy-editing
+  4: strong
+  5: excellent
+
+benchmark_clip_types:
+  - short-intro
+  - anatomy-explainer
+  - surgical-walkthrough
+  - pathology-outcomes
+  - patient-education
+  - conference-explainer

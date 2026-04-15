@@ -1,0 +1,37 @@
+speaker_policy:
+  primary_speaker: erion
+  languages:
+    - pt-BR
+    - en
+  quality_strategy: single-speaker-excellence-first
+  generalization_gate: do-not-generalize-before-weekly-real-use
+
+engine_policy:
+  benchmark_candidates:
+    - qwen3-tts
+    - chatterbox-multilingual
+  optional_later_candidate:
+    - tada
+  production_limit:
+    primary: 1
+    fallback: 1
+  current_state:
+    primary: null
+    fallback: null
+  decision_criteria:
+    - speaker_similarity
+    - medical_pronunciation
+    - naturalness
+    - long_form_stability
+    - editing_burden
+
+platform_policy:
+  use_case: bilingual-medical-narration
+  phase_1_targets:
+    - local-desktop-workflow
+    - segment-level-regeneration
+    - lexicon-aware-script-normalization
+  anti_goals:
+    - generic-marketplace-product
+    - many-engine-production-support
+    - multi-tenant-saas-before-proving-quality

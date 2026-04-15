@@ -1,0 +1,15 @@
+mappings:
+  - canonical_id: petroclival
+    pt-BR: petroclival
+    en: petroclival
+    domain: skull-base
+
+  - canonical_id: craniopharyngioma
+    pt-BR: craniofaringioma
+    en: craniopharyngioma
+    domain: skull-base
+
+  - canonical_id: endonasal-approach
+    pt-BR: abordagem endonasal
+    en: endonasal approach
+    domain: approach

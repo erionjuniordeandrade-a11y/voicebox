@@ -1,0 +1,21 @@
+lexicon:
+  - term: petroclival
+    language: pt-BR
+    normalized_display: petroclival
+    pronunciation_hint: pe-tro-cli-val
+    domain: skull-base
+    notes: Keep natural Brazilian stress.
+
+  - term: craniofaringioma
+    language: pt-BR
+    normalized_display: craniofaringioma
+    pronunciation_hint: cra-ni-o-fa-rin-gi-o-ma
+    domain: skull-base
+    notes: Avoid rushed syllable collapse.
+
+  - term: endonasal
+    language: pt-BR
+    normalized_display: endonasal
+    pronunciation_hint: en-do-na-sal
+    domain: approach
+    notes: Keep didactic clarity.
