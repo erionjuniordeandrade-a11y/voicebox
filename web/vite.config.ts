@@ -11,7 +11,14 @@ function manualChunks(id: string) {
   if (id.includes('@tanstack')) return 'tanstack';
   if (id.includes('framer-motion') || id.includes('/motion/')) return 'motion';
   if (id.includes('@dnd-kit')) return 'dnd-kit';
-  if (id.includes('wavesurfer.js')) return 'wavesurfer';
+  if (id.includes('wavesurfer.js') || id.includes('react-sound-visualizer')) return 'audio-viz';
+  if (id.includes('react-hook-form') || id.includes('@hookform/resolvers') || id.includes('/zod/')) {
+    return 'forms';
+  }
+  if (id.includes('date-fns')) return 'date-utils';
+  if (id.includes('lucide-react')) return 'icons';
+  if (id.includes('@tauri-apps')) return 'tauri';
+  if (id.includes('zustand')) return 'state';
 
   return 'vendor';
 }
