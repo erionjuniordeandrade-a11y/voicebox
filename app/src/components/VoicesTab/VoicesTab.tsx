@@ -1,9 +1,8 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Mic, Plus, Search, Sparkles } from 'lucide-react';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-
 import { MultiSelect } from '@/components/ui/multi-select';
 import {
   Table,
@@ -13,7 +12,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { ProfileForm } from '@/components/VoiceProfiles/ProfileForm';
 import { apiClient } from '@/lib/api/client';
 import type { VoiceProfileResponse } from '@/lib/api/types';
 import { BOTTOM_SAFE_AREA_PADDING } from '@/lib/constants/ui';
@@ -22,7 +20,32 @@ import { cn } from '@/lib/utils/cn';
 import { usePlayerStore } from '@/stores/playerStore';
 import { useServerStore } from '@/stores/serverStore';
 import { useUIStore } from '@/stores/uiStore';
-import { VoiceInspector } from './VoiceInspector';
+
+const ProfileForm = lazy(() =>
+  import('@/components/VoiceProfiles/ProfileForm').then((module) => ({ default: module.ProfileForm })),
+);
+
+const VoiceInspector = lazy(() =>
+  import('./VoiceInspector').then((module) => ({ default: module.VoiceInspector })),
+);
+
+function InspectorFallback() {
+  return (
+    <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
+      Loading inspector...
+    </div>
+  );
+}
+
+function ProfileDialogFallback() {
+  return (
+    <div className="fixed inset-x-0 bottom-0 z-50 flex justify-center pb-6 pointer-events-none">
+      <div className="rounded-full border border-border/60 bg-background/90 px-3 py-1 text-xs text-muted-foreground shadow-sm backdrop-blur">
+        Loading voice form...
+      </div>
+    </div>
+  );
+}
 
 export function VoicesTab() {
   const { data: profiles, isLoading } = useProfiles();
@@ -168,11 +191,15 @@ export function VoicesTab() {
       {/* Right: Inspector */}
       {selectedVoiceId && (
         <div className="w-[340px] shrink-0 border-l border-t rounded-tl-xl bg-muted/30">
-          <VoiceInspector key={selectedVoiceId} profileId={selectedVoiceId} />
+          <Suspense fallback={<InspectorFallback />}>
+            <VoiceInspector key={selectedVoiceId} profileId={selectedVoiceId} />
+          </Suspense>
         </div>
       )}
 
-      <ProfileForm />
+      <Suspense fallback={<ProfileDialogFallback />}>
+        <ProfileForm />
+      </Suspense>
     </div>
   );
 }
