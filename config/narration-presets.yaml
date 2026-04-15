@@ -1,0 +1,93 @@
+presets:
+  - id: ptbr-surgical-neutral
+    name: pt-BR Surgical Narration Neutral
+    language: pt-BR
+    category: surgical
+    speaking_rate: 0.94
+    pause_density: medium
+    sentence_chunk_size: medium
+    emphasis_style: restrained
+    expressive_range: low
+    post_processing_chain: narration-clean
+    notes: Calm, precise, authoritative. Default for surgical walkthroughs.
+
+  - id: ptbr-didactic-explainer
+    name: pt-BR Didactic Explainer
+    language: pt-BR
+    category: education
+    speaking_rate: 0.98
+    pause_density: medium-high
+    sentence_chunk_size: short
+    emphasis_style: didactic
+    expressive_range: low
+    post_processing_chain: narration-clean
+    notes: Use for teaching concepts and anatomy with extra clarity.
+
+  - id: ptbr-patient-education
+    name: pt-BR Patient Education Calm
+    language: pt-BR
+    category: patient-ed
+    speaking_rate: 0.96
+    pause_density: high
+    sentence_chunk_size: short
+    emphasis_style: warm
+    expressive_range: medium-low
+    post_processing_chain: narration-warm
+    notes: Softer delivery, still professional.
+
+  - id: en-surgical-neutral
+    name: English Surgical Narration Neutral
+    language: en
+    category: surgical
+    speaking_rate: 0.95
+    pause_density: medium
+    sentence_chunk_size: medium
+    emphasis_style: restrained
+    expressive_range: low
+    post_processing_chain: narration-clean
+    notes: English equivalent of the default surgical narration voice.
+
+  - id: en-conference-explainer
+    name: English Conference Explainer
+    language: en
+    category: conference
+    speaking_rate: 1.0
+    pause_density: medium
+    sentence_chunk_size: medium
+    emphasis_style: expert
+    expressive_range: medium-low
+    post_processing_chain: narration-clean
+    notes: Strong for lectures, congress commentary, and expert explanation.
+
+  - id: en-patient-education
+    name: English Patient Education Calm
+    language: en
+    category: patient-ed
+    speaking_rate: 0.97
+    pause_density: high
+    sentence_chunk_size: short
+    emphasis_style: warm
+    expressive_range: medium-low
+    post_processing_chain: narration-warm
+    notes: For clear, non-dramatic public-facing educational speech.
+
+post_processing_chains:
+  narration-clean:
+    description: Light cleanup with minimal coloration.
+    effects:
+      - type: compressor
+        threshold_db: -18
+        ratio: 2.0
+      - type: gain
+        db: 1.0
+
+  narration-warm:
+    description: Slightly softer patient-facing finish.
+    effects:
+      - type: compressor
+        threshold_db: -20
+        ratio: 2.2
+      - type: low_pass
+        cutoff_hz: 14500
+      - type: gain
+        db: 1.0

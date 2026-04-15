@@ -1,0 +1,21 @@
+lexicon:
+  - term: petroclival
+    language: en
+    normalized_display: petroclival
+    pronunciation_hint: pet-ro-clive-al
+    domain: skull-base
+    notes: Keep consistent with expert conference delivery.
+
+  - term: craniopharyngioma
+    language: en
+    normalized_display: craniopharyngioma
+    pronunciation_hint: crā-nee-o-fa-rin-jee-O-ma
+    domain: skull-base
+    notes: Avoid flattening the final stress.
+
+  - term: endonasal
+    language: en
+    normalized_display: endonasal
+    pronunciation_hint: en-do-NAY-zal
+    domain: approach
+    notes: Keep approach terminology crisp.

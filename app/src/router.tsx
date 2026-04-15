@@ -39,6 +39,11 @@ const MainEditorLazy = lazy(() =>
     default: module.MainEditor as ComponentType<any>,
   })),
 );
+const NarrationLazy = lazy(() =>
+  import('@/components/NarrationTab/NarrationTab').then((module) => ({
+    default: module.NarrationTab as ComponentType<any>,
+  })),
+);
 const StoriesLazy = lazy(() =>
   import('@/components/StoriesTab/StoriesTab').then((module) => ({
     default: module.StoriesTab as ComponentType<any>,
@@ -101,6 +106,7 @@ const SettingsAboutLazy = lazy(() =>
 );
 
 const MainEditorRoute = wrapLazyRoute(MainEditorLazy);
+const NarrationRoute = wrapLazyRoute(NarrationLazy);
 const StoriesRoute = wrapLazyRoute(StoriesLazy);
 const VoicesRoute = wrapLazyRoute(VoicesLazy);
 const AudioRoute = wrapLazyRoute(AudioLazy);
@@ -181,6 +187,13 @@ const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
   component: MainEditorRoute,
+});
+
+// Narration route
+const narrationRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/narration',
+  component: NarrationRoute,
 });
 
 // Stories route
@@ -274,6 +287,7 @@ const serverRedirectRoute = createRoute({
 // Route tree
 const routeTree = rootRoute.addChildren([
   indexRoute,
+  narrationRoute,
   storiesRoute,
   voicesRoute,
   audioRoute,
