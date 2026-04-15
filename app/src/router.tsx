@@ -5,28 +5,114 @@ import {
   Outlet,
   redirect,
 } from '@tanstack/react-router';
+import { lazy, Suspense, type ComponentType } from 'react';
 import { AppFrame } from '@/components/AppFrame/AppFrame';
-import { AudioTab } from '@/components/AudioTab/AudioTab';
-import { EffectsTab } from '@/components/EffectsTab/EffectsTab';
-import { MainEditor } from '@/components/MainEditor/MainEditor';
-import { ModelsTab } from '@/components/ModelsTab/ModelsTab';
-import { AboutPage } from '@/components/ServerTab/AboutPage';
-import { ChangelogPage } from '@/components/ServerTab/ChangelogPage';
-import { GeneralPage } from '@/components/ServerTab/GeneralPage';
-import { GenerationPage } from '@/components/ServerTab/GenerationPage';
-import { GpuPage } from '@/components/ServerTab/GpuPage';
-import { LogsPage } from '@/components/ServerTab/LogsPage';
-import { SettingsLayout } from '@/components/ServerTab/ServerTab';
 import { Sidebar } from '@/components/Sidebar';
-import { StoriesTab } from '@/components/StoriesTab/StoriesTab';
 import { Toaster } from '@/components/ui/toaster';
-import { VoicesTab } from '@/components/VoicesTab/VoicesTab';
 import { useGenerationProgress } from '@/lib/hooks/useGenerationProgress';
 import { useModelDownloadToast } from '@/lib/hooks/useModelDownloadToast';
 import { MODEL_DISPLAY_NAMES, useRestoreActiveTasks } from '@/lib/hooks/useRestoreActiveTasks';
 
 // Simple platform check that works in both web and Tauri
 const isMacOS = () => navigator.platform.toLowerCase().includes('mac');
+
+function RouteFallback() {
+  return (
+    <div className="flex flex-1 items-center justify-center text-sm text-muted-foreground">
+      Loading module...
+    </div>
+  );
+}
+
+function wrapLazyRoute(LazyComponent: ComponentType<any>) {
+  return function LazyRouteComponent() {
+    return (
+      <Suspense fallback={<RouteFallback />}>
+        <LazyComponent />
+      </Suspense>
+    );
+  };
+}
+
+const MainEditorLazy = lazy(() =>
+  import('@/components/MainEditor/MainEditor').then((module) => ({
+    default: module.MainEditor as ComponentType<any>,
+  })),
+);
+const StoriesLazy = lazy(() =>
+  import('@/components/StoriesTab/StoriesTab').then((module) => ({
+    default: module.StoriesTab as ComponentType<any>,
+  })),
+);
+const VoicesLazy = lazy(() =>
+  import('@/components/VoicesTab/VoicesTab').then((module) => ({
+    default: module.VoicesTab as ComponentType<any>,
+  })),
+);
+const AudioLazy = lazy(() =>
+  import('@/components/AudioTab/AudioTab').then((module) => ({
+    default: module.AudioTab as ComponentType<any>,
+  })),
+);
+const EffectsLazy = lazy(() =>
+  import('@/components/EffectsTab/EffectsTab').then((module) => ({
+    default: module.EffectsTab as ComponentType<any>,
+  })),
+);
+const ModelsLazy = lazy(() =>
+  import('@/components/ModelsTab/ModelsTab').then((module) => ({
+    default: module.ModelsTab as ComponentType<any>,
+  })),
+);
+const SettingsLayoutLazy = lazy(() =>
+  import('@/components/ServerTab/ServerTab').then((module) => ({
+    default: module.SettingsLayout as ComponentType<any>,
+  })),
+);
+const SettingsGeneralLazy = lazy(() =>
+  import('@/components/ServerTab/GeneralPage').then((module) => ({
+    default: module.GeneralPage as ComponentType<any>,
+  })),
+);
+const SettingsGenerationLazy = lazy(() =>
+  import('@/components/ServerTab/GenerationPage').then((module) => ({
+    default: module.GenerationPage as ComponentType<any>,
+  })),
+);
+const SettingsGpuLazy = lazy(() =>
+  import('@/components/ServerTab/GpuPage').then((module) => ({
+    default: module.GpuPage as ComponentType<any>,
+  })),
+);
+const SettingsLogsLazy = lazy(() =>
+  import('@/components/ServerTab/LogsPage').then((module) => ({
+    default: module.LogsPage as ComponentType<any>,
+  })),
+);
+const SettingsChangelogLazy = lazy(() =>
+  import('@/components/ServerTab/ChangelogPage').then((module) => ({
+    default: module.ChangelogPage as ComponentType<any>,
+  })),
+);
+const SettingsAboutLazy = lazy(() =>
+  import('@/components/ServerTab/AboutPage').then((module) => ({
+    default: module.AboutPage as ComponentType<any>,
+  })),
+);
+
+const MainEditorRoute = wrapLazyRoute(MainEditorLazy);
+const StoriesRoute = wrapLazyRoute(StoriesLazy);
+const VoicesRoute = wrapLazyRoute(VoicesLazy);
+const AudioRoute = wrapLazyRoute(AudioLazy);
+const EffectsRoute = wrapLazyRoute(EffectsLazy);
+const ModelsRoute = wrapLazyRoute(ModelsLazy);
+const SettingsLayoutRoute = wrapLazyRoute(SettingsLayoutLazy);
+const SettingsGeneralRoute = wrapLazyRoute(SettingsGeneralLazy);
+const SettingsGenerationRoute = wrapLazyRoute(SettingsGenerationLazy);
+const SettingsGpuRoute = wrapLazyRoute(SettingsGpuLazy);
+const SettingsLogsRoute = wrapLazyRoute(SettingsLogsLazy);
+const SettingsChangelogRoute = wrapLazyRoute(SettingsChangelogLazy);
+const SettingsAboutRoute = wrapLazyRoute(SettingsAboutLazy);
 
 // Root layout component
 function RootLayout() {
@@ -94,86 +180,86 @@ const rootRoute = createRootRoute({
 const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
-  component: MainEditor,
+  component: MainEditorRoute,
 });
 
 // Stories route
 const storiesRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/stories',
-  component: StoriesTab,
+  component: StoriesRoute,
 });
 
 // Voices route
 const voicesRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/voices',
-  component: VoicesTab,
+  component: VoicesRoute,
 });
 
 // Audio route
 const audioRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/audio',
-  component: AudioTab,
+  component: AudioRoute,
 });
 
 // Effects route
 const effectsRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/effects',
-  component: EffectsTab,
+  component: EffectsRoute,
 });
 
 // Models route
 const modelsRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/models',
-  component: ModelsTab,
+  component: ModelsRoute,
 });
 
 // Settings layout route (parent for sub-tabs)
 const settingsRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/settings',
-  component: SettingsLayout,
+  component: SettingsLayoutRoute,
 });
 
 // Settings sub-routes
 const settingsGeneralRoute = createRoute({
   getParentRoute: () => settingsRoute,
   path: '/',
-  component: GeneralPage,
+  component: SettingsGeneralRoute,
 });
 
 const settingsGenerationRoute = createRoute({
   getParentRoute: () => settingsRoute,
   path: '/generation',
-  component: GenerationPage,
+  component: SettingsGenerationRoute,
 });
 
 const settingsGpuRoute = createRoute({
   getParentRoute: () => settingsRoute,
   path: '/gpu',
-  component: GpuPage,
+  component: SettingsGpuRoute,
 });
 
 const settingsChangelogRoute = createRoute({
   getParentRoute: () => settingsRoute,
   path: '/changelog',
-  component: ChangelogPage,
+  component: SettingsChangelogRoute,
 });
 
 const settingsLogsRoute = createRoute({
   getParentRoute: () => settingsRoute,
   path: '/logs',
-  component: LogsPage,
+  component: SettingsLogsRoute,
 });
 
 const settingsAboutRoute = createRoute({
   getParentRoute: () => settingsRoute,
   path: '/about',
-  component: AboutPage,
+  component: SettingsAboutRoute,
 });
 
 // Redirect old /server path to /settings

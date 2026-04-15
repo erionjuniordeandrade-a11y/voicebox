@@ -4,30 +4,21 @@ import { FormControl } from '@/components/ui/form';
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
+  SelectSeparator,
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
 import type { VoiceProfileResponse } from '@/lib/api/types';
 import { getLanguageOptionsForEngine } from '@/lib/constants/languages';
+import {
+  ENGINE_OPTIONS,
+  ENGINE_SUPPORT_LABELS,
+  getEngineSupportTier,
+} from '@/lib/constants/supportPolicy';
 import type { GenerationFormValues } from '@/lib/hooks/useGenerationForm';
-
-/**
- * Engine/model options and their display metadata.
- * Adding a new engine means adding one entry here.
- */
-const ENGINE_OPTIONS = [
-  { value: 'qwen:1.7B', label: 'Qwen3-TTS 1.7B', engine: 'qwen' },
-  { value: 'qwen:0.6B', label: 'Qwen3-TTS 0.6B', engine: 'qwen' },
-  { value: 'qwen_custom_voice:1.7B', label: 'Qwen CustomVoice 1.7B', engine: 'qwen_custom_voice' },
-  { value: 'qwen_custom_voice:0.6B', label: 'Qwen CustomVoice 0.6B', engine: 'qwen_custom_voice' },
-  { value: 'luxtts', label: 'LuxTTS', engine: 'luxtts' },
-  { value: 'chatterbox', label: 'Chatterbox', engine: 'chatterbox' },
-  { value: 'chatterbox_turbo', label: 'Chatterbox Turbo', engine: 'chatterbox_turbo' },
-  { value: 'tada:1B', label: 'TADA 1B', engine: 'tada' },
-  { value: 'tada:3B', label: 'TADA 3B Multilingual', engine: 'tada' },
-  { value: 'kokoro', label: 'Kokoro 82M', engine: 'kokoro' },
-] as const;
 
 const ENGINE_DESCRIPTIONS: Record<string, string> = {
   qwen: 'Multi-language, two sizes',
@@ -48,6 +39,13 @@ const CLONING_ENGINES = new Set(['qwen', 'luxtts', 'chatterbox', 'chatterbox_tur
 function getAvailableOptions(selectedProfile?: VoiceProfileResponse | null) {
   if (!selectedProfile) return ENGINE_OPTIONS;
   return ENGINE_OPTIONS.filter((opt) => isProfileCompatibleWithEngine(selectedProfile, opt.engine));
+}
+
+function getGroupedOptions(options: ReturnType<typeof getAvailableOptions>) {
+  return {
+    core: options.filter((option) => option.tier === 'core'),
+    experimental: options.filter((option) => option.tier === 'experimental'),
+  };
 }
 
 function getSelectValue(engine: string, modelSize?: string): string {
@@ -118,6 +116,7 @@ export function EngineModelSelector({ form, compact, selectedProfile }: EngineMo
   const modelSize = form.watch('modelSize');
   const selectValue = getSelectValue(engine, modelSize);
   const availableOptions = getAvailableOptions(selectedProfile);
+  const groupedOptions = getGroupedOptions(availableOptions);
 
   const currentEngineAvailable = availableOptions.some((opt) => opt.value === selectValue);
 
@@ -140,11 +139,39 @@ export function EngineModelSelector({ form, compact, selectedProfile }: EngineMo
         </SelectTrigger>
       </FormControl>
       <SelectContent>
-        {availableOptions.map((opt) => (
-          <SelectItem key={opt.value} value={opt.value} className={itemClass}>
-            {opt.label}
-          </SelectItem>
-        ))}
+        {groupedOptions.core.length > 0 && (
+          <SelectGroup>
+            <SelectLabel>Core engines</SelectLabel>
+            {groupedOptions.core.map((opt) => (
+              <SelectItem key={opt.value} value={opt.value} className={itemClass}>
+                <div className="flex w-full items-center justify-between gap-3">
+                  <span>{opt.label}</span>
+                  <span className="text-[10px] uppercase tracking-wide text-emerald-500">
+                    {ENGINE_SUPPORT_LABELS[opt.tier]}
+                  </span>
+                </div>
+              </SelectItem>
+            ))}
+          </SelectGroup>
+        )}
+
+        {groupedOptions.core.length > 0 && groupedOptions.experimental.length > 0 && <SelectSeparator />}
+
+        {groupedOptions.experimental.length > 0 && (
+          <SelectGroup>
+            <SelectLabel>Experimental engines</SelectLabel>
+            {groupedOptions.experimental.map((opt) => (
+              <SelectItem key={opt.value} value={opt.value} className={itemClass}>
+                <div className="flex w-full items-center justify-between gap-3">
+                  <span>{opt.label}</span>
+                  <span className="text-[10px] uppercase tracking-wide text-amber-500">
+                    {ENGINE_SUPPORT_LABELS[opt.tier]}
+                  </span>
+                </div>
+              </SelectItem>
+            ))}
+          </SelectGroup>
+        )}
       </SelectContent>
     </Select>
   );
@@ -152,7 +179,9 @@ export function EngineModelSelector({ form, compact, selectedProfile }: EngineMo
 
 /** Returns a human-readable description for the currently selected engine. */
 export function getEngineDescription(engine: string): string {
-  return ENGINE_DESCRIPTIONS[engine] ?? '';
+  const tier = getEngineSupportTier(engine);
+  const prefix = tier === 'core' ? 'Core engine' : 'Experimental engine';
+  return `${prefix} — ${ENGINE_DESCRIPTIONS[engine] ?? ''}`.trim();
 }
 
 /**
